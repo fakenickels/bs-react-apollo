@@ -4,6 +4,12 @@ open ApolloTypes;
 
 [@bs.module] external gql : ApolloTypes.gql = "graphql-tag";
 
+let unwrap_bool = (b: option(bool)) =>
+  switch (b) {
+  | Some(value) => Js.Nullable.return(Js.Boolean.to_js_boolean(value))
+  | None => Js.Nullable.undefined
+  };
+
 type results = {loading: bool};
 
 module ApolloProvider = {
@@ -38,10 +44,29 @@ type apolloData = {
 module Query = {
   [@bs.module "react-apollo"]
   external reactClass : ReasonReact.reactClass = "Query";
-  let make = (~query, children: apolloData => ReasonReact.reactElement) =>
+  let make =
+      (
+        ~query,
+        ~fetchPolicy: option(string)=?,
+        ~ssr: option(bool)=?,
+        ~notifyOnNetworkStatusChange: option(bool)=?,
+        ~pollInterval: option(int)=?,
+        children: apolloData => ReasonReact.reactElement,
+      ) =>
     ReasonReact.wrapJsForReason(
       ~reactClass,
-      ~props={"query": gql(. query##query), "variables": query##variables},
+      ~props=
+        Js.Nullable.(
+          {
+            "query": gql(. query##query),
+            "variables": query##variables,
+            "fetchPolicy": fromOption(fetchPolicy),
+            "ssr": unwrap_bool(ssr),
+            "notifyOnNetworkStatusChange":
+              unwrap_bool(notifyOnNetworkStatusChange),
+            "pollInterval": fromOption(pollInterval),
+          }
+        ),
       children,
     );
 };
