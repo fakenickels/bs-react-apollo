@@ -71,7 +71,13 @@ module Query = {
     );
 };
 
-type apolloMutation = unit => unit;
+type mutationOptions = {
+  .
+  "variables": Js.Nullable.t(Js.Json.t),
+  "refetchQueries": Js.Nullable.t(array(string)),
+};
+
+type apolloMutation = mutationOptions => Js.Promise.t(apolloData);
 
 module Mutation = {
   [@bs.module "react-apollo"]
