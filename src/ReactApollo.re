@@ -88,7 +88,7 @@ module Mutation = {
       ~props=
         Js.Nullable.(
           {
-            "mutation": gql(. mutation##mutation),
+            "mutation": gql(. mutation##query),
             "variables": mutation##variables,
             "onError": fromOption(onError),
             "onCompleted": fromOption(onCompleted),
