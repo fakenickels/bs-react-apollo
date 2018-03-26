@@ -45,3 +45,37 @@ module Query = {
       children,
     );
 };
+
+type apolloMutation = unit => unit;
+
+module Mutation = {
+  [@bs.module "react-apollo"]
+  external reactClass : ReasonReact.reactClass = "Mutation";
+  let make =
+      (
+        ~mutation,
+        ~onError: option(unit => unit)=?,
+        ~onCompleted: option(unit => unit)=?,
+        children: (apolloMutation, apolloData) => ReasonReact.reactElement,
+      ) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass,
+      ~props=
+        Js.Nullable.(
+          {
+            "mutation": gql(. mutation##mutation),
+            "variables": mutation##variables,
+            "onError": fromOption(onError),
+            "onCompleted": fromOption(onCompleted),
+          }
+        ),
+      children,
+    );
+};
+
+module ApolloConsumer = {
+  [@bs.module "react-apollo"]
+  external reactClass : ReasonReact.reactClass = "ApolloConsumer";
+  let make = (children: generatedApolloClient => ReasonReact.reactElement) =>
+    ReasonReact.wrapJsForReason(~reactClass, ~props=Js.Obj.empty(), children);
+};
