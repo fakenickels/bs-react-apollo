@@ -77,7 +77,8 @@ type mutationOptions = {
   "refetchQueries": Js.Nullable.t(array(string)),
 };
 
-type apolloMutation = mutationOptions => Js.Promise.t(apolloData);
+type apolloMutation =
+  Js.Nullable.t(mutationOptions) => Js.Promise.t(apolloData);
 
 module Mutation = {
   [@bs.module "react-apollo"]
