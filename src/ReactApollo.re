@@ -33,11 +33,11 @@ type apolloOptions = {
 type apolloData = {
   .
   "loading": Js.boolean,
-  "data": Js.Json.t,
-  "error": apolloError,
-  "refetch": Js.Json.t => Js.Promise.t(apolloData),
+  "data": Js.Nullable.t(Js.Json.t),
+  "error": Js.Nullable.t(apolloError),
+  "refetch": Js.Nullable.t(Js.Json.t) => Js.Promise.t(apolloData),
   "networkStatus": int,
-  "variables": Js.Json.t,
+  "variables": Js.Nullable.t(Js.Json.t),
   "fetchMore": apolloOptions => Js.Promise.t(unit),
 };
 
