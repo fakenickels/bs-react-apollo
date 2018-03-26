@@ -26,13 +26,14 @@ module ApolloProvider = {
 type apolloOptions = {
   .
   "query": gql,
-  "variables": Js.Json.t,
+  "variables": Js.Nullable.t(Js.Json.t),
   /* "updateQuery": Js.t, TODO: ? */
 };
 
 type apolloData = {
   .
   "loading": Js.boolean,
+  "called": Js.boolean,
   "data": Js.Nullable.t(Js.Json.t),
   "error": Js.Nullable.t(apolloError),
   "refetch": Js.Nullable.t(Js.Json.t) => Js.Promise.t(apolloData),
