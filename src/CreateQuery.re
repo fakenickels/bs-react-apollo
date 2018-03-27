@@ -14,7 +14,7 @@ module Create = (Config: Config) => {
   let queryGql = gql(. Config.query);
   type apolloOptions = {
     .
-    "query": gql,
+    "query": ApolloTypes.queryString,
     "variables": Js.Json.t,
   };
   type apolloData = {
@@ -24,9 +24,11 @@ module Create = (Config: Config) => {
     "data": Js.Nullable.t(Js.Json.t),
     "error": Js.Nullable.t(apolloError),
     "refetch":
-      [@bs.meth] (Js.Nullable.t(Js.Json.t) => Js.Promise.t(apolloData)),
+      [@bs.meth] (
+        Js.Null_undefined.t(Js.Json.t) => Js.Promise.t(apolloData)
+      ),
     "networkStatus": int,
-    "variables": Js.Nullable.t(Js.Json.t),
+    "variables": Js.Null_undefined.t(Js.Json.t),
     "fetchMore": [@bs.meth] (apolloOptions => Js.Promise.t(unit)),
   };
   type data =
@@ -36,7 +38,7 @@ module Create = (Config: Config) => {
     | NoData;
   type apollo = {
     data,
-    refetch: option(Js.Json.t) => data,
+    refetch: option(Js.Json.t) => Js.Promise.t(data),
     fetchMore: (~variables: Js.Json.t) => Js.Promise.t(unit),
     networkStatus: int,
   };
@@ -54,12 +56,15 @@ module Create = (Config: Config) => {
       };
   [@bs.module "react-apollo"]
   external reactClass : ReasonReact.reactClass = "Query";
-  let convertJsInputToReason = apolloData => {
-    data: apolloDataToReason(apolloData##data),
+  let convertJsInputToReason = (apolloData: apolloData) => {
+    data: apolloDataToReason(apolloData),
     refetch: variables =>
-      variables |> Js.Null_undefined.fromOption |> apolloData##refetch,
+      apolloData##refetch(variables |> Js.Null_undefined.fromOption)
+      |> Js.Promise.then_(data =>
+           data |> apolloDataToReason |> Js.Promise.resolve
+         ),
     fetchMore: (~variables) =>
-      {"variables": variables, "query": queryGql} |> apolloData##fetchMore,
+      apolloData##fetchMore({"variables": variables, "query": queryGql}),
     networkStatus: apolloData##networkStatus,
   };
   let make =
