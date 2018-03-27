@@ -64,8 +64,8 @@ module Create = (Config: Config) => {
   };
   let make =
       (
-        ~query,
         ~fetchPolicy: option(string)=?,
+        ~variables: option(Js.Json.t)=?,
         ~ssr: option(bool)=?,
         ~notifyOnNetworkStatusChange: option(bool)=?,
         ~pollInterval: option(int)=?,
@@ -76,8 +76,8 @@ module Create = (Config: Config) => {
       ~props=
         Js.Nullable.(
           {
-            "query": gql(. query##query),
-            "variables": query##variables,
+            "query": queryGql,
+            "variables": variables |> Js.Null_undefined.fromOption,
             "fetchPolicy": fromOption(fetchPolicy),
             "ssr": unwrap_bool(ssr),
             "notifyOnNetworkStatusChange":

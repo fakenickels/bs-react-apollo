@@ -42,7 +42,7 @@ type apolloData = {
   "fetchMore": apolloOptions => Js.Promise.t(unit),
 };
 
-module CreateQuery = CreateQuery;
+module CreateQuery = CreateQuery.Create;
 
 type mutationOptions = {
   .
