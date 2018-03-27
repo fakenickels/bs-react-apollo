@@ -392,9 +392,9 @@ bs-platform@^2.1.0:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-2.2.3.tgz#d905ae10a5f3621e6a739041dfa0b58483a2174f"
 
-"bs-react-apollo@https://github.com/zenlist/bs-react-apollo.git":
+"bs-react-apollo@https://github.com/grsabreu/bs-react-apollo.git":
   version "0.1.0"
-  resolved "https://github.com/zenlist/bs-react-apollo.git#f29c86540d59ae62e12f4bb335ad2be6e82f8f02"
+  resolved "https://github.com/grsabreu/bs-react-apollo.git#a40a7c64834bf7646394d09c98d75de7ec9d65fe"
 
 buffer-xor@^1.0.3:
   version "1.0.3"

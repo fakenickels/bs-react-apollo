@@ -1,5 +1,3 @@
-open ReactApollo;
-
 let component = ReasonReact.statelessComponent("Page");
 
 let int_from_opt = (~default: int=0, option: option(int)) =>
@@ -18,38 +16,33 @@ module CountQuery = [%graphql
 |}
 ];
 
+module FilmsQuery = ReactApollo.CreateQuery(CountQuery);
+
 let make = _children => {
   ...component,
-  render: _self => {
-    let countQuery = CountQuery.make();
-    let parse = countQuery##parse;
-    <Query query=countQuery>
+  render: _self =>
+    <FilmsQuery>
       ...(
-           result =>
+           ({data}) =>
              <div>
                <h1> ("Star Wars 2: " |> ReasonReact.stringToElement) </h1>
                (
-                 result##loading |> Js.to_bool ?
-                   "Loading" |> ReasonReact.stringToElement :
-                   (
-                     switch (result##data |> Js.Nullable.toOption) {
-                     | None => ReasonReact.nullElement
-                     | Some(data) =>
-                       let result = parse(data);
-                       switch (result##allFilms) {
-                       | None => "No Fils" |> ReasonReact.stringToElement
-                       | Some(films) =>
-                         "Films Found: "
-                         ++ (
-                           films##totalCount |> int_from_opt |> string_of_int
-                         )
-                         |> ReasonReact.stringToElement
-                       };
-                     }
-                   )
+                 switch (data) {
+                 | NoData
+                 | Error(_) =>
+                   ReasonReact.stringToElement("Something went wrong")
+                 | Loading => ReasonReact.stringToElement("Loading")
+                 | Data(result) =>
+                   switch (result##allFilms) {
+                   | None => "No Fils" |> ReasonReact.stringToElement
+                   | Some(films) =>
+                     "Films Found: "
+                     ++ (films##totalCount |> int_from_opt |> string_of_int)
+                     |> ReasonReact.stringToElement
+                   }
+                 }
                )
              </div>
          )
-    </Query>;
-  },
+    </FilmsQuery>,
 };
