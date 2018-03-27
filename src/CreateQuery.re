@@ -52,42 +52,40 @@ module Create = (Config: Config) => {
       | (false, _, Some(error)) => Error(error)
       | (false, None, None) => NoData
       };
-  module Query = {
-    [@bs.module "react-apollo"]
-    external reactClass : ReasonReact.reactClass = "Query";
-    let convertJsInputToReason = apolloData => {
-      data: apolloDataToReason(apolloData##data),
-      refetch: variables =>
-        variables |> Js.Null_undefined.fromOption |> apolloData##refetch,
-      fetchMore: (~variables) =>
-        {"variables": variables, "query": queryGql} |> apolloData##fetchMore,
-      networkStatus: apolloData##networkStatus,
-    };
-    let make =
-        (
-          ~query,
-          ~fetchPolicy: option(string)=?,
-          ~ssr: option(bool)=?,
-          ~notifyOnNetworkStatusChange: option(bool)=?,
-          ~pollInterval: option(int)=?,
-          children: apollo => ReasonReact.reactElement,
-        ) =>
-      ReasonReact.wrapJsForReason(
-        ~reactClass,
-        ~props=
-          Js.Nullable.(
-            {
-              "query": gql(. query##query),
-              "variables": query##variables,
-              "fetchPolicy": fromOption(fetchPolicy),
-              "ssr": unwrap_bool(ssr),
-              "notifyOnNetworkStatusChange":
-                unwrap_bool(notifyOnNetworkStatusChange),
-              "pollInterval": fromOption(pollInterval),
-            }
-          ),
-        apolloData =>
-        apolloData |> convertJsInputToReason |> children
-      );
+  [@bs.module "react-apollo"]
+  external reactClass : ReasonReact.reactClass = "Query";
+  let convertJsInputToReason = apolloData => {
+    data: apolloDataToReason(apolloData##data),
+    refetch: variables =>
+      variables |> Js.Null_undefined.fromOption |> apolloData##refetch,
+    fetchMore: (~variables) =>
+      {"variables": variables, "query": queryGql} |> apolloData##fetchMore,
+    networkStatus: apolloData##networkStatus,
   };
+  let make =
+      (
+        ~query,
+        ~fetchPolicy: option(string)=?,
+        ~ssr: option(bool)=?,
+        ~notifyOnNetworkStatusChange: option(bool)=?,
+        ~pollInterval: option(int)=?,
+        children: apollo => ReasonReact.reactElement,
+      ) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass,
+      ~props=
+        Js.Nullable.(
+          {
+            "query": gql(. query##query),
+            "variables": query##variables,
+            "fetchPolicy": fromOption(fetchPolicy),
+            "ssr": unwrap_bool(ssr),
+            "notifyOnNetworkStatusChange":
+              unwrap_bool(notifyOnNetworkStatusChange),
+            "pollInterval": fromOption(pollInterval),
+          }
+        ),
+      apolloData =>
+      apolloData |> convertJsInputToReason |> children
+    );
 };
