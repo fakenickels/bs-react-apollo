@@ -4,3 +4,4 @@ node_modules/
 lib
 *.bs.js
 *.bsb.lock
+examples/swapi/build
