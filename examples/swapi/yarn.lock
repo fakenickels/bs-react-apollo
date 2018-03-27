@@ -394,7 +394,7 @@ bs-platform@^2.1.0:
 
 "bs-react-apollo@https://github.com/grsabreu/bs-react-apollo.git":
   version "0.1.0"
-  resolved "https://github.com/grsabreu/bs-react-apollo.git#a40a7c64834bf7646394d09c98d75de7ec9d65fe"
+  resolved "https://github.com/grsabreu/bs-react-apollo.git#d86dfae131f4c2a70ed6767371cb5daa1a063e2f"
 
 buffer-xor@^1.0.3:
   version "1.0.3"
