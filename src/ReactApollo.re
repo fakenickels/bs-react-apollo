@@ -42,35 +42,7 @@ type apolloData = {
   "fetchMore": apolloOptions => Js.Promise.t(unit),
 };
 
-module Query = {
-  [@bs.module "react-apollo"]
-  external reactClass : ReasonReact.reactClass = "Query";
-  let make =
-      (
-        ~query,
-        ~fetchPolicy: option(string)=?,
-        ~ssr: option(bool)=?,
-        ~notifyOnNetworkStatusChange: option(bool)=?,
-        ~pollInterval: option(int)=?,
-        children: apolloData => ReasonReact.reactElement,
-      ) =>
-    ReasonReact.wrapJsForReason(
-      ~reactClass,
-      ~props=
-        Js.Nullable.(
-          {
-            "query": gql(. query##query),
-            "variables": query##variables,
-            "fetchPolicy": fromOption(fetchPolicy),
-            "ssr": unwrap_bool(ssr),
-            "notifyOnNetworkStatusChange":
-              unwrap_bool(notifyOnNetworkStatusChange),
-            "pollInterval": fromOption(pollInterval),
-          }
-        ),
-      children,
-    );
-};
+module CreateQuery = CreateQuery;
 
 type mutationOptions = {
   .
