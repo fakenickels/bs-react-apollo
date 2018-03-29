@@ -1,5 +1,6 @@
 {
     "name": "bs-react-apollo",
+    "namespace": true,
     "sources": [
         {
             "dir": "src",
