@@ -69,7 +69,7 @@ module Create = (Config: Config) => {
   };
   let make =
       (
-        ~fetchPolicy: option(string)=?,
+        ~fetchPolicy="cache-and-network",
         ~variables: option(Js.Json.t)=?,
         ~ssr: option(bool)=?,
         ~notifyOnNetworkStatusChange: option(bool)=?,
@@ -83,7 +83,7 @@ module Create = (Config: Config) => {
           {
             "query": queryGql,
             "variables": variables |> Js.Null_undefined.fromOption,
-            "fetchPolicy": fromOption(fetchPolicy),
+            "fetchPolicy": fetchPolicy,
             "ssr": unwrap_bool(ssr),
             "notifyOnNetworkStatusChange":
               unwrap_bool(notifyOnNetworkStatusChange),
